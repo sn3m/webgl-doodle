@@ -23,7 +23,10 @@ export function createProgram(gl, shaders) {
     }
 
     let attributes = {};
-    const activeAttributes = gl.getProgramParameter(program, gl.ACTIVE_ATTRIBUTES);
+    const activeAttributes = gl.getProgramParameter(
+        program,
+        gl.ACTIVE_ATTRIBUTES
+    );
     for (let i = 0; i < activeAttributes; i++) {
         const info = gl.getActiveAttrib(program, i);
         attributes[info.name] = gl.getAttribLocation(program, info.name);
@@ -46,7 +49,7 @@ export function buildPrograms(gl, shaders) {
             var program = shaders[name];
             programs[name] = createProgram(gl, [
                 createShader(gl, program.vertex, gl.VERTEX_SHADER),
-                createShader(gl, program.fragment, gl.FRAGMENT_SHADER)
+                createShader(gl, program.fragment, gl.FRAGMENT_SHADER),
             ]);
         } catch (err) {
             throw new Error('Error compiling ' + name + '\n' + err);
@@ -56,10 +59,10 @@ export function buildPrograms(gl, shaders) {
 }
 
 export function createTexture(gl, options) {
-    const target  = options.target  || gl.TEXTURE_2D;
+    const target = options.target || gl.TEXTURE_2D;
     const iformat = options.iformat || gl.RGBA;
-    const format  = options.format  || gl.RGBA;
-    const type    = options.type    || gl.UNSIGNED_BYTE;
+    const format = options.format || gl.RGBA;
+    const type = options.type || gl.UNSIGNED_BYTE;
     const texture = options.texture || gl.createTexture();
 
     if (typeof options.unit !== 'undefined') {
@@ -69,22 +72,37 @@ export function createTexture(gl, options) {
     gl.bindTexture(target, texture);
 
     if (options.image) {
-        gl.texImage2D(
-            target, 0, iformat,
-            format, type, options.image);
+        gl.texImage2D(target, 0, iformat, format, type, options.image);
     } else {
         // if options.data == null, just allocate
         gl.texImage2D(
-            target, 0, iformat,
-            options.width, options.height, 0,
-            format, type, options.data);
+            target,
+            0,
+            iformat,
+            options.width,
+            options.height,
+            0,
+            format,
+            type,
+            options.data
+        );
     }
 
-    if (options.wrapS) { gl.texParameteri(target, gl.TEXTURE_WRAP_S, options.wrapS); }
-    if (options.wrapT) { gl.texParameteri(target, gl.TEXTURE_WRAP_T, options.wrapT); }
-    if (options.min) { gl.texParameteri(target, gl.TEXTURE_MIN_FILTER, options.min); }
-    if (options.mag) { gl.texParameteri(target, gl.TEXTURE_MAG_FILTER, options.mag); }
-    if (options.mip) { gl.generateMipmap(target); }
+    if (options.wrapS) {
+        gl.texParameteri(target, gl.TEXTURE_WRAP_S, options.wrapS);
+    }
+    if (options.wrapT) {
+        gl.texParameteri(target, gl.TEXTURE_WRAP_T, options.wrapT);
+    }
+    if (options.min) {
+        gl.texParameteri(target, gl.TEXTURE_MIN_FILTER, options.min);
+    }
+    if (options.mag) {
+        gl.texParameteri(target, gl.TEXTURE_MAG_FILTER, options.mag);
+    }
+    if (options.mip) {
+        gl.generateMipmap(target);
+    }
 
     return texture;
 }

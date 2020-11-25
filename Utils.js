@@ -1,5 +1,4 @@
 export default class Utils {
-
     static init(object, defaults, options) {
         let filtered = Utils.clone(options || {});
         let defaulted = Utils.clone(defaults || {});
@@ -14,5 +13,4 @@ export default class Utils {
     static clone(object) {
         return JSON.parse(JSON.stringify(object));
     }
-
 }

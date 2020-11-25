@@ -1,5 +1,4 @@
 export default class Scene {
-
     constructor() {
         this.nodes = [];
     }
@@ -9,7 +8,6 @@ export default class Scene {
     }
 
     traverse(before, after) {
-        this.nodes.forEach(node => node.traverse(before, after));
+        this.nodes.forEach((node) => node.traverse(before, after));
     }
-
 }
