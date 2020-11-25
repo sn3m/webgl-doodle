@@ -49,7 +49,7 @@ export default class Renderer {
         gl.uniformMatrix4fv(
             program.uniforms.uProjection,
             false,
-            camera.projection
+            camera.projection,
         );
 
         scene.traverse(
@@ -61,7 +61,7 @@ export default class Renderer {
                     gl.uniformMatrix4fv(
                         program.uniforms.uViewModel,
                         false,
-                        matrix
+                        matrix,
                     );
                     gl.activeTexture(gl.TEXTURE0);
                     gl.bindTexture(gl.TEXTURE_2D, node.gl.texture);
@@ -70,13 +70,13 @@ export default class Renderer {
                         gl.TRIANGLES,
                         node.gl.indices,
                         gl.UNSIGNED_SHORT,
-                        0
+                        0,
                     );
                 }
             },
             (node) => {
                 matrix = matrixStack.pop();
-            }
+            },
         );
     }
 
@@ -90,7 +90,7 @@ export default class Renderer {
         gl.bufferData(
             gl.ARRAY_BUFFER,
             new Float32Array(model.vertices),
-            gl.STATIC_DRAW
+            gl.STATIC_DRAW,
         );
         gl.enableVertexAttribArray(0);
         gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 0, 0);
@@ -99,7 +99,7 @@ export default class Renderer {
         gl.bufferData(
             gl.ARRAY_BUFFER,
             new Float32Array(model.texcoords),
-            gl.STATIC_DRAW
+            gl.STATIC_DRAW,
         );
         gl.enableVertexAttribArray(1);
         gl.vertexAttribPointer(1, 2, gl.FLOAT, false, 0, 0);
@@ -108,7 +108,7 @@ export default class Renderer {
         gl.bufferData(
             gl.ARRAY_BUFFER,
             new Float32Array(model.normals),
-            gl.STATIC_DRAW
+            gl.STATIC_DRAW,
         );
         gl.enableVertexAttribArray(2);
         gl.vertexAttribPointer(2, 3, gl.FLOAT, false, 0, 0);
@@ -118,7 +118,7 @@ export default class Renderer {
         gl.bufferData(
             gl.ELEMENT_ARRAY_BUFFER,
             new Uint16Array(model.indices),
-            gl.STATIC_DRAW
+            gl.STATIC_DRAW,
         );
 
         return { vao, indices };

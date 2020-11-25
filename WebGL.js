@@ -25,7 +25,7 @@ export function createProgram(gl, shaders) {
     let attributes = {};
     const activeAttributes = gl.getProgramParameter(
         program,
-        gl.ACTIVE_ATTRIBUTES
+        gl.ACTIVE_ATTRIBUTES,
     );
     for (let i = 0; i < activeAttributes; i++) {
         const info = gl.getActiveAttrib(program, i);
@@ -84,7 +84,7 @@ export function createTexture(gl, options) {
             0,
             format,
             type,
-            options.data
+            options.data,
         );
     }
 

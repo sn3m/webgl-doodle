@@ -13,7 +13,7 @@ export default class Physics {
                     node.translation,
                     node.translation,
                     node.velocity,
-                    dt
+                    dt,
                 );
                 node.updateTransform();
                 this.scene.traverse((other) => {
@@ -39,19 +39,19 @@ export default class Physics {
                 aabb1.min[0],
                 aabb1.max[0],
                 aabb2.min[0],
-                aabb2.max[0]
+                aabb2.max[0],
             ) &&
             this.intervalIntersection(
                 aabb1.min[1],
                 aabb1.max[1],
                 aabb2.min[1],
-                aabb2.max[1]
+                aabb2.max[1],
             ) &&
             this.intervalIntersection(
                 aabb1.min[2],
                 aabb1.max[2],
                 aabb2.min[2],
-                aabb2.max[2]
+                aabb2.max[2],
             )
         );
     }
@@ -78,7 +78,7 @@ export default class Physics {
             {
                 min: minb,
                 max: maxb,
-            }
+            },
         );
 
         if (!isColliding) {
