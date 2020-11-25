@@ -1,3 +1,6 @@
+import Player from './Player.js';
+import Platform from './Platform.js';
+
 const vec3 = glMatrix.vec3;
 const mat4 = glMatrix.mat4;
 
@@ -118,5 +121,11 @@ export default class Physics {
 
         vec3.add(a.translation, a.translation, minDirection);
         a.updateTransform();
+
+        if (a instanceof Player && b instanceof Platform) {
+            // Player jump
+            a.velocity[1] = 0;
+            a.jump = true;
+        }
     }
 }
