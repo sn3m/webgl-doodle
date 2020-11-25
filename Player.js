@@ -25,13 +25,13 @@ export default class Player extends Node {
             vec3.create(),
             -Math.sin(c.rotation[1]),
             0,
-            -Math.cos(c.rotation[1])
+            -Math.cos(c.rotation[1]),
         );
         const right = vec3.set(
             vec3.create(),
             Math.cos(c.rotation[1]),
             0,
-            -Math.sin(c.rotation[1])
+            -Math.sin(c.rotation[1]),
         );
 
         // 1: add movement acceleration

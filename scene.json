@@ -72,8 +72,5 @@
         "./assets/images/crate-diffuse.png",
         "./assets/images/grass.png"
     ],
-    "meshes": [
-        "./assets/models/cube.json",
-        "./assets/models/pyramid.json"
-    ]
+    "meshes": ["./assets/models/cube.json", "./assets/models/pyramid.json"]
 }

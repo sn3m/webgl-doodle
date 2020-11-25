@@ -1,5 +1,4 @@
 export default class Application {
-
     constructor(canvas) {
         this._update = this._update.bind(this);
 
@@ -14,10 +13,9 @@ export default class Application {
         this.gl = null;
         try {
             this.gl = this.canvas.getContext('webgl2', {
-                preserveDrawingBuffer: true
+                preserveDrawingBuffer: true,
             });
-        } catch (error) {
-        }
+        } catch (error) {}
 
         if (!this.gl) {
             console.log('Cannot create WebGL 2.0 context');
@@ -35,9 +33,10 @@ export default class Application {
         const canvas = this.canvas;
         const gl = this.gl;
 
-        if (canvas.width !== canvas.clientWidth ||
-            canvas.height !== canvas.clientHeight)
-        {
+        if (
+            canvas.width !== canvas.clientWidth ||
+            canvas.height !== canvas.clientHeight
+        ) {
             canvas.width = canvas.clientWidth;
             canvas.height = canvas.clientHeight;
 
@@ -62,5 +61,4 @@ export default class Application {
     resize() {
         // resize code (e.g. update projection matrix)
     }
-
 }

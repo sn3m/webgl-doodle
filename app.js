@@ -16,11 +16,11 @@ class App extends Application {
         this.aspect = 1;
 
         this.pointerlockchangeHandler = this.pointerlockchangeHandler.bind(
-            this
+            this,
         );
         document.addEventListener(
             'pointerlockchange',
-            this.pointerlockchangeHandler
+            this.pointerlockchangeHandler,
         );
 
         this.load('scene.json');

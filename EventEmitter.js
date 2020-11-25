@@ -1,5 +1,4 @@
 export const EventEmitter = {
-
     _eventHandlers: {},
 
     addEventListener: (event, handler) => {
@@ -9,7 +8,7 @@ export const EventEmitter = {
         this._eventHandlers[event].push(handler);
     },
 
-    trigger: event => {
+    trigger: (event) => {
         const handlers = this._eventHandlers[event];
         if (!handlers) {
             return;
@@ -18,6 +17,5 @@ export const EventEmitter = {
         for (let i = 0; i < handlers.length; i++) {
             handlers[i].apply(this, Array.prototype.slice.call(arguments, 1));
         }
-    }
-
+    },
 };
