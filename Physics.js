@@ -13,7 +13,7 @@ export default class Physics {
                 vec3.scaleAndAdd(node.translation, node.translation, node.velocity, dt);
                 node.updateTransform();
                 this.scene.traverse(other => {
-                    if (node !== other) {
+                    if (node !== other  && !node.ignoreCollision && !other.ignoreCollision) {
                         this.resolveCollision(node, other);
                     }
                 });

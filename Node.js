@@ -5,7 +5,6 @@ const mat4 = glMatrix.mat4;
 const quat = glMatrix.quat;
 
 export default class Node {
-
     constructor(options) {
         Utils.init(this, Node.defaults, options);
 
@@ -18,7 +17,7 @@ export default class Node {
 
     updateTransform() {
         const t = this.transform;
-        const degrees = this.rotation.map(x => x * 180 / Math.PI);
+        const degrees = this.rotation.map((x) => (x * 180) / Math.PI);
         const q = quat.fromEuler(quat.create(), ...degrees);
         const v = vec3.clone(this.translation);
         const s = vec3.clone(this.scale);
@@ -54,7 +53,6 @@ export default class Node {
         }
         after && after(this);
     }
-
 }
 
 Node.defaults = {
@@ -65,4 +63,5 @@ Node.defaults = {
         min: [0, 0, 0],
         max: [0, 0, 0],
     },
+    ignoreCollision: false,
 };
