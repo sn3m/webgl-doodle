@@ -53,7 +53,7 @@ export default class Renderer {
             node => {
                 matrixStack.push(mat4.clone(matrix));
                 mat4.mul(matrix, matrix, node.transform);
-                if (node.gl.vao) {
+                if (node.gl && node.gl.vao) {
                     gl.bindVertexArray(node.gl.vao);
                     gl.uniformMatrix4fv(program.uniforms.uViewModel, false, matrix);
                     gl.activeTexture(gl.TEXTURE0);
