@@ -12,13 +12,15 @@ class App extends Application {
         this.pointerlockchangeHandler = this.pointerlockchangeHandler.bind(
           this
         );
+        this.cameraHandler = this.cameraHandler.bind(this);
+        this.resume = this.resume.bind(this);
 
         document.addEventListener(
           'pointerlockchange',
           this.pointerlockchangeHandler
         );
 
-        this.elapsedTimeHandler();
+        this.enableEventListeners();
     }
 
     start() {
@@ -29,7 +31,12 @@ class App extends Application {
         this.startTime = this.time;
         this.aspect = 1;
 
-        this.initHandlers();
+        Object.assign(this, {
+            score: 0,
+            scoreInterval: undefined
+        });
+
+        this.initHandlers(this);
 
         this.load('scene.json');
     }
@@ -66,39 +73,73 @@ class App extends Application {
 
         if (document.pointerLockElement === this.canvas) {
             this.player.enable();
+            if(this.scoreInterval === undefined) {
+                this.scoreHandler(this,'enable');
+            }
         } else {
             this.player.disable();
+            this.scoreHandler(this,'disable');
+            this.showMenu();
         }
     }
 
-     elapsedTimeHandler() {
-        // elapsedTime init
-         Object.assign(this, {
-             elapsedTime: "0"
-         });
+    scoreHandler(context, action) {
+        if(action === 'enable') {
+            context.scoreInterval = setInterval(() => {
+                context.score += 1;
+                document.getElementById("score").innerText = context.score;
+              },100);
+        }
+        else if(action === 'disable') {
+            // Clear interval
+            if (typeof context.scoreInterval !== "undefined") {
+                clearInterval(context.scoreInterval);
+                context.scoreInterval = undefined;
+            }
+        }
+    }
 
-         let startTime;
+    cameraHandler() {
+        this.enableCamera();
+    }
 
-         startTimer(this);
+    showMenu() {
+        this.disableEventListeners();
+        document.getElementById("pause-overlay").style.display = "block";
+        document.getElementById("pause-controls").style.visibility = "visible";
+        let textHeader = document.createElement("h1");
+        let text = document.createTextNode("The game is paused.");
+        textHeader.appendChild(text);
+        document.getElementById("pause-controls").appendChild(textHeader);
+        let btn = document.createElement("BUTTON");
+        btn.innerText = "Resume";
+        btn.className = "pause-button";
+        btn.id = "pause-resume";
+        document.getElementById("pause-controls").appendChild(btn);
+        document.getElementById("pause-resume").addEventListener("click", this.resume);
+    }
 
-         function startTimer(context) {
-             // get start time
-             startTime = Date.now();
+    resume() {
+        document.getElementById("pause-overlay").style.display = "none";
+        document.getElementById("pause-controls").style.visibility = "hidden";
+        this.enableEventListeners();
 
-             setInterval(() => {
-                 context.elapsedTime = getElapsedTime(startTime);
-             }, 100);
-         }
+        // clean up
+        let myNode = document.getElementById("pause-controls");
+        let fc = myNode.firstChild;
 
-         function getElapsedTime(startTime) {
-             let endTime = Date.now();
-             let elapsedTime = new Date(endTime - startTime);
+        while( fc ) {
+            myNode.removeChild( fc );
+            fc = myNode.firstChild;
+        }
+    }
 
-             // hours without added timezone
-             let hours = Math.floor(elapsedTime/(60*60*1000));
+    enableEventListeners() {
+        document.addEventListener("click", this.cameraHandler);
+    }
 
-             return hours + ":" + elapsedTime.getMinutes() + ":" + elapsedTime.getSeconds() + ":" + elapsedTime.getMilliseconds().toString().padStart(3,'0').charAt(0);
-         }
+    disableEventListeners() {
+        document.removeEventListener('click', this.cameraHandler);
     }
 
     update() {
@@ -135,7 +176,5 @@ class App extends Application {
 document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.querySelector('canvas');
     const app = new App(canvas);
-    const gui = new dat.GUI();
-    gui.add(app, 'enableCamera');
-    gui.add(app, 'elapsedTime').name("Elapsed time").listen();
+    //const gui = new dat.GUI();
 });
