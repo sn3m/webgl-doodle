@@ -6,8 +6,10 @@ const mat4 = glMatrix.mat4;
 export default class Renderer {
     constructor(gl) {
         this.gl = gl;
-
-        gl.clearColor(1, 1, 1, 1);
+        // default color
+        //gl.clearColor(0.3,0.4,0.9,1.0); // blue
+        //gl.clearColor(0.834, 0.852, 0.970,1);
+        gl.clearColor(0.788,0.883,0.950,1) // light blue
         gl.enable(gl.DEPTH_TEST);
         gl.enable(gl.CULL_FACE);
 
