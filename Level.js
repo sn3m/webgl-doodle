@@ -21,7 +21,6 @@ export default class Level {
         for (let i = 0; i < 5; i++) {
             this.addPlatform(0, 0, i * -this.separation);
         }
-        console.log(this.scene);
     }
 
     update(dt) {
@@ -53,21 +52,20 @@ export default class Level {
     }
 
     addPlatform(x, y, z, isDynamic = false) {
-        console.log('add platform', z);
         const id = this.platformCount + 1;
         this.platformCount++;
-        const mesh = new Mesh(this.spec.meshes[0]);
-        const texture = this.spec.textures[1];
+        const mesh = new Mesh(this.spec.meshes[3]);
+        const texture = this.spec.textures[3];
         const spec = {
             type: 'platform',
-            mesh: 0,
-            texture: 1,
+            mesh: 3,
+            texture: 3,
             aabb: {
-                min: [-1, -0.2, -1],
-                max: [1, 0.2, 1],
+                min: [-0.8, -0.2, -0.8],
+                max: [0.8, 0.2, 0.8],
             },
             translation: [0 + x, -0.2 + y, 0 + z],
-            scale: [1, 0.2, 1],
+            scale: [1.5, 1.5, 1.5],
         };
         if (isDynamic) {
             spec.velocity = [0, 0, this.levelVelocity];
