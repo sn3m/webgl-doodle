@@ -7,10 +7,9 @@ import SceneBuilder from './SceneBuilder.js';
 import Player from './Player.js';
 
 class App extends Application {
-
     initHandlers() {
         this.pointerlockchangeHandler = this.pointerlockchangeHandler.bind(
-          this
+            this,
         );
         this.cameraHandler = this.cameraHandler.bind(this);
         this.resume = this.resume.bind(this);
@@ -18,8 +17,8 @@ class App extends Application {
         this.showMenu = this.showMenu.bind(this);
 
         document.addEventListener(
-          'pointerlockchange',
-          this.pointerlockchangeHandler
+            'pointerlockchange',
+            this.pointerlockchangeHandler,
         );
 
         this.enableEventListeners();
@@ -37,8 +36,7 @@ class App extends Application {
             score: 0,
             scoreInterval: undefined,
             isPaused: true,
-            //isStart: true
-            gameOver: false
+            gameOver: false,
         });
 
         this.initHandlers(this);
@@ -79,42 +77,34 @@ class App extends Application {
         }
 
         if (document.pointerLockElement === this.canvas) {
-            if(this.isPaused) {
+            if (this.isPaused) {
                 this.isPaused = false;
                 this.player.enable();
-                if(this.scoreInterval === undefined) {
-                    this.scoreHandler(this,'enable');
+                if (this.scoreInterval === undefined) {
+                    this.scoreHandler(this, 'enable');
                 }
                 // new time
                 this.startTime = Date.now();
                 // continue the animation loop
                 this._update();
             }
-            /*if(this.isStart) {
-                this.isStart = false;
-                this.player.enable();
-                if(this.scoreInterval === undefined) {
-                    this.scoreHandler(this,'enable');
-                }
-            }*/
         } else {
             this.isPaused = true;
             this.player.disable();
-            this.scoreHandler(this,'disable');
+            this.scoreHandler(this, 'disable');
             this.showMenu();
         }
     }
 
     scoreHandler(context, action) {
-        if(action === 'enable') {
+        if (action === 'enable') {
             context.scoreInterval = setInterval(() => {
                 context.score += 1;
-                document.getElementById("score").innerText = context.score;
-              },100);
-        }
-        else if(action === 'disable') {
+                document.getElementById('score').innerText = context.score;
+            }, 100);
+        } else if (action === 'disable') {
             // Clear interval
-            if (typeof context.scoreInterval !== "undefined") {
+            if (typeof context.scoreInterval !== 'undefined') {
                 clearInterval(context.scoreInterval);
                 context.scoreInterval = undefined;
             }
@@ -127,97 +117,102 @@ class App extends Application {
 
     showMenu() {
         this.disableEventListeners();
-        document.getElementById("pause-overlay").style.display = "block";
-        document.getElementById("pause-controls").style.visibility = "visible";
-        if(this.gameOver) {
-            this.gameOver()
-        }
-        else{
+        document.getElementById('pause-overlay').style.display = 'block';
+        document.getElementById('pause-controls').style.visibility = 'visible';
+        if (this.gameOver) {
+            this.gameOverHandler();
+        } else {
             this.pause();
         }
     }
 
     pause() {
-        let textHeader = document.createElement("h1");
-        let text = document.createTextNode("The game is paused.");
+        let textHeader = document.createElement('h1');
+        let text = document.createTextNode('The game is paused.');
+        textHeader.style.marginBottom = '10vh';
         textHeader.appendChild(text);
-        document.getElementById("pause-controls").appendChild(textHeader);
-        let btn = document.createElement("BUTTON");
-        btn.innerText = "Resume";
-        btn.className = "pause-button";
-        btn.id = "pause-resume";
-        document.getElementById("pause-controls").appendChild(btn);
-        document.getElementById("pause-resume").addEventListener("click", this.resume);
+        document.getElementById('pause-controls').appendChild(textHeader);
+        let btn = document.createElement('BUTTON');
+        btn.innerText = 'Resume';
+        btn.className = 'pause-button';
+        btn.id = 'pause-resume';
+        document.getElementById('pause-controls').appendChild(btn);
+        document
+            .getElementById('pause-resume')
+            .addEventListener('click', this.resume);
     }
 
     resume() {
-        document.getElementById("pause-overlay").style.display = "none";
-        document.getElementById("pause-controls").style.visibility = "hidden";
+        document.getElementById('pause-overlay').style.display = 'none';
+        document.getElementById('pause-controls').style.visibility = 'hidden';
         this.enableEventListeners();
 
         // clean up
-        let myNode = document.getElementById("pause-controls");
+        let myNode = document.getElementById('pause-controls');
         let fc = myNode.firstChild;
 
-        while( fc ) {
-            myNode.removeChild( fc );
+        while (fc) {
+            myNode.removeChild(fc);
             fc = myNode.firstChild;
         }
-        document.removeEventListener("pause-resume", this.resume);
+        document.removeEventListener('pause-resume', this.resume);
     }
 
-    gameOver() {
-        let textHeader = document.createElement("h1");
-        let text = document.createTextNode("GAME OVER");
+    gameOverHandler() {
+        let textHeader = document.createElement('h1');
+        let text = document.createTextNode('GAME OVER');
         textHeader.appendChild(text);
-        document.getElementById("pause-controls").appendChild(textHeader);
-        textHeader = document.createElement("h1");
-        text = document.createTextNode("Your score: " + this.score);
+        document.getElementById('pause-controls').appendChild(textHeader);
+        textHeader = document.createElement('h1');
+        text = document.createTextNode('Your score: ' + this.score);
+        textHeader.style.marginBottom = '6vh';
         textHeader.appendChild(text);
-        document.getElementById("pause-controls").appendChild(textHeader);
-        let btn = document.createElement("BUTTON");
-        btn.innerText = "Play again";
-        btn.className = "pause-button";
-        btn.onclick = function(){
-            location.href='index.html';
+        document.getElementById('pause-controls').appendChild(textHeader);
+        let btn = document.createElement('BUTTON');
+        btn.innerText = 'Go to main menu';
+        btn.className = 'pause-button';
+        btn.onclick = function () {
+            location.href = 'index.html';
         };
-        document.getElementById("pause-controls").appendChild(btn);
+        document.getElementById('pause-controls').appendChild(btn);
     }
 
     gameStart() {
         this.disableEventListeners();
-        document.getElementById("wrapper").style.display = "block";
-        let textHeader = document.createElement("div");
-        textHeader.className = "title";
-        let text = document.createTextNode("Doodle Jump 3D");
+        document.getElementById('wrapper').style.display = 'block';
+        let textHeader = document.createElement('div');
+        textHeader.className = 'title';
+        let text = document.createTextNode('Doodle Jump 3D');
         textHeader.appendChild(text);
-        document.getElementById("wrapper").appendChild(textHeader);
-        let btn = document.createElement("BUTTON");
-        btn.innerText = "PLAY";
-        btn.className = "main-button";
-        btn.id = "pause-resume";
-        document.getElementById("wrapper").appendChild(btn);
-        document.getElementById("pause-resume").addEventListener("click", this.resumeStart);
+        document.getElementById('wrapper').appendChild(textHeader);
+        let btn = document.createElement('BUTTON');
+        btn.innerText = 'PLAY';
+        btn.className = 'main-button';
+        btn.id = 'pause-resume';
+        document.getElementById('wrapper').appendChild(btn);
+        document
+            .getElementById('pause-resume')
+            .addEventListener('click', this.resumeStart);
     }
 
     resumeStart() {
-        document.getElementById("wrapper").style.display = "none";
-        document.getElementById("score-section").style.visibility = "visible";
+        document.getElementById('wrapper').style.display = 'none';
+        document.getElementById('score-section').style.visibility = 'visible';
         this.enableEventListeners();
 
         // clean up
-        let myNode = document.getElementById("wrapper");
+        let myNode = document.getElementById('wrapper');
         let fc = myNode.firstChild;
 
-        while( fc ) {
-            myNode.removeChild( fc );
+        while (fc) {
+            myNode.removeChild(fc);
             fc = myNode.firstChild;
         }
-        document.removeEventListener("pause-resume", this.resumeStart);
+        document.removeEventListener('pause-resume', this.resumeStart);
     }
 
     enableEventListeners() {
-        document.addEventListener("click", this.cameraHandler);
+        document.addEventListener('click', this.cameraHandler);
     }
 
     disableEventListeners() {

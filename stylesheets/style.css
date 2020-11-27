@@ -83,17 +83,22 @@ body {
 h1 {
     font-family: 'Amatic SC', cursive;
     text-align: center;
-    font-size: 3em;
-    margin-bottom: 1em;
+    font-size: 7vh;
+    margin-bottom: 3vh;
 }
 
 .pause-button {
     font-family: 'Amatic SC', cursive;
     text-align: center;
-    font-size: 2em;
+    font-size: 5vh;
     display: block;
     margin: 0 auto;
     cursor: pointer;
+    background-color: white;
+}
+
+.pause-button:hover {
+    background-color: #e4ffd6;
 }
 
 .main-button {
