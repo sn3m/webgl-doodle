@@ -14,6 +14,8 @@ class App extends Application {
         );
         this.cameraHandler = this.cameraHandler.bind(this);
         this.resume = this.resume.bind(this);
+        this.resumeStart = this.resumeStart.bind(this);
+        this.showMenu = this.showMenu.bind(this);
 
         document.addEventListener(
           'pointerlockchange',
@@ -36,6 +38,7 @@ class App extends Application {
             scoreInterval: undefined,
             isPaused: true,
             //isStart: true
+            gameOver: false
         });
 
         this.initHandlers(this);
@@ -126,7 +129,12 @@ class App extends Application {
         this.disableEventListeners();
         document.getElementById("pause-overlay").style.display = "block";
         document.getElementById("pause-controls").style.visibility = "visible";
-        this.pause();
+        if(this.gameOver) {
+            this.gameOver()
+        }
+        else{
+            this.pause();
+        }
     }
 
     pause() {
@@ -171,12 +179,13 @@ class App extends Application {
         btn.innerText = "Play again";
         btn.className = "pause-button";
         btn.onclick = function(){
-            location.href='game.html';
+            location.href='index.html';
         };
         document.getElementById("pause-controls").appendChild(btn);
     }
 
     gameStart() {
+        this.disableEventListeners();
         document.getElementById("wrapper").style.display = "block";
         let textHeader = document.createElement("div");
         textHeader.className = "title";
@@ -193,7 +202,8 @@ class App extends Application {
 
     resumeStart() {
         document.getElementById("wrapper").style.display = "none";
-        //this.enableEventListeners();
+        document.getElementById("score-section").style.visibility = "visible";
+        this.enableEventListeners();
 
         // clean up
         let myNode = document.getElementById("wrapper");
