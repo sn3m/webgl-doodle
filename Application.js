@@ -23,6 +23,9 @@ export default class Application {
     }
 
     _update() {
+        // stop looping if paused
+        if(this.isPaused) return;
+
         this._resize();
         this.update();
         this.render();

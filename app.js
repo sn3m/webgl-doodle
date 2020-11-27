@@ -33,7 +33,9 @@ class App extends Application {
 
         Object.assign(this, {
             score: 0,
-            scoreInterval: undefined
+            scoreInterval: undefined,
+            isPaused: false,
+            isStart: true
         });
 
         this.initHandlers(this);
@@ -72,11 +74,26 @@ class App extends Application {
         }
 
         if (document.pointerLockElement === this.canvas) {
-            this.player.enable();
-            if(this.scoreInterval === undefined) {
-                this.scoreHandler(this,'enable');
+            if(this.isPaused) {
+                this.isPaused = false;
+                this.player.enable();
+                if(this.scoreInterval === undefined) {
+                    this.scoreHandler(this,'enable');
+                }
+                // new time
+                this.startTime = Date.now();
+                // continue the animation loop
+                this._update();
+            }
+            if(this.isStart) {
+                this.isStart = false;
+                this.player.enable();
+                if(this.scoreInterval === undefined) {
+                    this.scoreHandler(this,'enable');
+                }
             }
         } else {
+            this.isPaused = true;
             this.player.disable();
             this.scoreHandler(this,'disable');
             this.showMenu();
