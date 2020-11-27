@@ -1,5 +1,6 @@
 import Player from './Player.js';
 import Platform from './Platform.js';
+import Coin from './Coin.js';
 
 const vec3 = glMatrix.vec3;
 const mat4 = glMatrix.mat4;
@@ -81,7 +82,19 @@ export default class Physics {
         );
 
         if (!isColliding) {
-            return;
+            return false;
+        }
+
+        if (a instanceof Coin || b instanceof Coin) {
+            if (a instanceof Player) {
+                // TODO add score
+                b.parent.removeChild(b);
+                return true;
+            } else if (b instanceof Player) {
+                // TODO add score
+                a.parent.removeChild(a);
+                return true;
+            }
         }
 
         // Move node A minimally to avoid collision.

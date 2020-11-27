@@ -2,6 +2,7 @@ import SceneBuilder from './SceneBuilder.js';
 import Physics from './Physics.js';
 import Mesh from './Mesh.js';
 import Platform from './Platform.js';
+import Coin from './Coin.js';
 
 export default class Level {
     constructor(spec, renderer) {
@@ -22,8 +23,10 @@ export default class Level {
             let coords = [0, 0, i * -this.separation];
             if (i > 1) {
                 coords = this.randomizePlatformCoords(coords);
+                this.addPlatform(coords[0], coords[1], coords[2]);
+            } else {
+                this.addPlatform(coords[0], coords[1], coords[2], false, true);
             }
-            this.addPlatform(coords[0], coords[1], coords[2]);
         }
     }
 
@@ -55,7 +58,7 @@ export default class Level {
         });
     }
 
-    addPlatform(x, y, z, isDynamic = false) {
+    addPlatform(x, y, z, isDynamic = false, noCoin = false) {
         const id = this.platformCount + 1;
         this.platformCount++;
 
@@ -77,6 +80,11 @@ export default class Level {
         }
         const platform = new Platform(id, mesh, texture, spec);
 
+        const coin = noCoin ? null : this.getCoin();
+        if (coin) {
+            platform.addChild(coin);
+        }
+
         this.scene.addNode(platform);
         this.lastPlatform = platform;
 
@@ -95,5 +103,31 @@ export default class Level {
 
     getRandom(factor = 1) {
         return Number.parseFloat(((Math.random() - 0.5) * factor).toFixed(2));
+    }
+
+    getCoin() {
+        if (Math.random() > 0.4) {
+            return null;
+        }
+
+        const mesh = new Mesh(this.spec.meshes[4]);
+        const texture = this.spec.textures[4];
+        const spec = {
+            type: 'coin',
+            mesh: 4,
+            texture: 4,
+            aabb: {
+                min: [0.1, -0.2, -0.2],
+                max: [0.4, 0.2, 0.2],
+            },
+            translation: [-0.15, 0.4, -0.2],
+            rotation: [0, 1.5, 0],
+            scale: [1, 1, 1],
+        };
+
+        const coin = new Coin(mesh, texture, spec);
+        this.renderer.prepareNode(coin);
+
+        return coin;
     }
 }
