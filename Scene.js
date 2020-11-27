@@ -16,6 +16,13 @@ export default class Scene {
         }
     }
 
+    removeCoin(coin) {
+        const index = this.nodes.findIndex((node) => node === coin);
+        if (index > -1) {
+            this.nodes.splice(index, 1);
+        }
+    }
+
     traverse(before, after) {
         this.nodes.forEach((node) => node.traverse(before, after));
     }
