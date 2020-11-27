@@ -1,19 +1,30 @@
+import Player from './Player.js';
+import Platform from './Platform.js';
+
 const vec3 = glMatrix.vec3;
 const mat4 = glMatrix.mat4;
 
 export default class Physics {
-
     constructor(scene) {
         this.scene = scene;
     }
 
     update(dt) {
-        this.scene.traverse(node => {
+        this.scene.traverse((node) => {
             if (node.velocity) {
-                vec3.scaleAndAdd(node.translation, node.translation, node.velocity, dt);
+                vec3.scaleAndAdd(
+                    node.translation,
+                    node.translation,
+                    node.velocity,
+                    dt,
+                );
                 node.updateTransform();
-                this.scene.traverse(other => {
-                    if (node !== other  && !node.ignoreCollision && !other.ignoreCollision) {
+                this.scene.traverse((other) => {
+                    if (
+                        node !== other &&
+                        !node.ignoreCollision &&
+                        !other.ignoreCollision
+                    ) {
                         this.resolveCollision(node, other);
                     }
                 });
@@ -26,9 +37,26 @@ export default class Physics {
     }
 
     aabbIntersection(aabb1, aabb2) {
-        return this.intervalIntersection(aabb1.min[0], aabb1.max[0], aabb2.min[0], aabb2.max[0])
-            && this.intervalIntersection(aabb1.min[1], aabb1.max[1], aabb2.min[1], aabb2.max[1])
-            && this.intervalIntersection(aabb1.min[2], aabb1.max[2], aabb2.min[2], aabb2.max[2]);
+        return (
+            this.intervalIntersection(
+                aabb1.min[0],
+                aabb1.max[0],
+                aabb2.min[0],
+                aabb2.max[0],
+            ) &&
+            this.intervalIntersection(
+                aabb1.min[1],
+                aabb1.max[1],
+                aabb2.min[1],
+                aabb2.max[1],
+            ) &&
+            this.intervalIntersection(
+                aabb1.min[2],
+                aabb1.max[2],
+                aabb2.min[2],
+                aabb2.max[2],
+            )
+        );
     }
 
     resolveCollision(a, b) {
@@ -45,13 +73,16 @@ export default class Physics {
         const maxb = vec3.add(vec3.create(), posb, b.aabb.max);
 
         // Check if there is collision.
-        const isColliding = this.aabbIntersection({
-            min: mina,
-            max: maxa
-        }, {
-            min: minb,
-            max: maxb
-        });
+        const isColliding = this.aabbIntersection(
+            {
+                min: mina,
+                max: maxa,
+            },
+            {
+                min: minb,
+                max: maxb,
+            },
+        );
 
         if (!isColliding) {
             return;
@@ -90,6 +121,13 @@ export default class Physics {
 
         vec3.add(a.translation, a.translation, minDirection);
         a.updateTransform();
-    }
 
+        if (a instanceof Player && b instanceof Platform) {
+            // Player jump
+            if (minDirection[1] !== 0) {
+                a.velocity[1] = 0;
+                a.jump = true;
+            }
+        }
+    }
 }

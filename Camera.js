@@ -19,7 +19,7 @@ export default class Camera extends Node {
             this.fov,
             this.aspect,
             this.near,
-            this.far
+            this.far,
         );
     }
 

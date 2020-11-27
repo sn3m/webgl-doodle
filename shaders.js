@@ -28,5 +28,5 @@ void main() {
 `;
 
 export default {
-    simple: { vertex, fragment }
+    simple: { vertex, fragment },
 };
