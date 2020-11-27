@@ -17,6 +17,8 @@ export default class Player extends Node {
         this.keyupHandler = this.keyupHandler.bind(this);
         this.keys = {};
         this.jump = false;
+
+        this.isStarted = false;
     }
 
     update(dt) {
@@ -51,13 +53,15 @@ export default class Player extends Node {
         }
 
         // 1.5: add vertical acceleration
-        let accUp = -0.5; // gravity strength
-        if (this.jump) {
-            accUp = 20;
-            this.jump = false;
+        if (this.isStarted) {
+            let accUp = -0.5; // gravity strength
+            if (this.jump) {
+                accUp = 20;
+                this.jump = false;
+            }
+            const up = vec3.set(vec3.create(), 0, accUp, 0);
+            vec3.add(acc, acc, up);
         }
-        const up = vec3.set(vec3.create(), 0, accUp, 0);
-        vec3.add(acc, acc, up);
 
         // 2: update velocity
         vec3.scaleAndAdd(c.velocity, c.velocity, acc, dt * c.acceleration);
@@ -96,6 +100,7 @@ export default class Player extends Node {
         document.addEventListener('mousemove', this.mousemoveHandler);
         document.addEventListener('keydown', this.keydownHandler);
         document.addEventListener('keyup', this.keyupHandler);
+        this.isStarted = true;
     }
 
     disable() {

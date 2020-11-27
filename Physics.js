@@ -124,8 +124,10 @@ export default class Physics {
 
         if (a instanceof Player && b instanceof Platform) {
             // Player jump
-            a.velocity[1] = 0;
-            a.jump = true;
+            if (minDirection[1] !== 0) {
+                a.velocity[1] = 0;
+                a.jump = true;
+            }
         }
     }
 }
