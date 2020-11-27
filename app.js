@@ -189,6 +189,16 @@ class App extends Application {
         btn.className = 'main-button';
         btn.id = 'pause-resume';
         document.getElementById('wrapper').appendChild(btn);
+        let img = document.createElement("img");
+        img.src = "./images/wasd-transparent.png";
+        img.width = 200; // not responsive
+        img.style.display = "block";
+        img.style.marginLeft = "auto";
+        img.style.marginRight = "auto";
+        img.style.marginTop = "10vh";
+
+
+        document.getElementById('wrapper').appendChild(img);
         document
             .getElementById('pause-resume')
             .addEventListener('click', this.resumeStart);
@@ -219,6 +229,11 @@ class App extends Application {
     }
 
     update() {
+        // player fell
+        if(this.player && this.player.translation[1] < -10) {
+            this.gameOver = true;
+            document.exitPointerLock();
+        }
         const t = (this.time = Date.now());
         const dt = (this.time - this.startTime) * 0.001;
         this.startTime = this.time;
