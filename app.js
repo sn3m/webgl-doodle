@@ -34,11 +34,13 @@ class App extends Application {
         Object.assign(this, {
             score: 0,
             scoreInterval: undefined,
-            isPaused: false,
-            isStart: true
+            isPaused: true,
+            //isStart: true
         });
 
         this.initHandlers(this);
+
+        this.gameStart();
 
         this.load('scene.json');
     }
@@ -85,13 +87,13 @@ class App extends Application {
                 // continue the animation loop
                 this._update();
             }
-            if(this.isStart) {
+            /*if(this.isStart) {
                 this.isStart = false;
                 this.player.enable();
                 if(this.scoreInterval === undefined) {
                     this.scoreHandler(this,'enable');
                 }
-            }
+            }*/
         } else {
             this.isPaused = true;
             this.player.disable();
@@ -153,6 +155,7 @@ class App extends Application {
             myNode.removeChild( fc );
             fc = myNode.firstChild;
         }
+        document.removeEventListener("pause-resume", this.resume);
     }
 
     gameOver() {
@@ -171,6 +174,36 @@ class App extends Application {
             location.href='game.html';
         };
         document.getElementById("pause-controls").appendChild(btn);
+    }
+
+    gameStart() {
+        document.getElementById("wrapper").style.display = "block";
+        let textHeader = document.createElement("div");
+        textHeader.className = "title";
+        let text = document.createTextNode("Doodle Jump 3D");
+        textHeader.appendChild(text);
+        document.getElementById("wrapper").appendChild(textHeader);
+        let btn = document.createElement("BUTTON");
+        btn.innerText = "PLAY";
+        btn.className = "main-button";
+        btn.id = "pause-resume";
+        document.getElementById("wrapper").appendChild(btn);
+        document.getElementById("pause-resume").addEventListener("click", this.resumeStart);
+    }
+
+    resumeStart() {
+        document.getElementById("wrapper").style.display = "none";
+        //this.enableEventListeners();
+
+        // clean up
+        let myNode = document.getElementById("wrapper");
+        let fc = myNode.firstChild;
+
+        while( fc ) {
+            myNode.removeChild( fc );
+            fc = myNode.firstChild;
+        }
+        document.removeEventListener("pause-resume", this.resumeStart);
     }
 
     enableEventListeners() {
