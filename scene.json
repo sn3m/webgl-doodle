@@ -30,9 +30,9 @@
     "textures": [
         "./assets/images/crate-diffuse.png",
         "./assets/images/grass.png",
-        "./assets/images/doodler-texture-v1.1.lwos.png",
-        "./assets/images/K67.jpg",
-        "./assets/images/pexels-fwstudio-122458.jpg"
+        "./assets/images/doodler.png",
+        "./assets/images/grass2.jpg",
+        "./assets/images/gold.jpg"
     ],
     "meshes": [
         "./assets/models/cube.json",
