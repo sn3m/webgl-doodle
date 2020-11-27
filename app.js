@@ -124,6 +124,10 @@ class App extends Application {
         this.disableEventListeners();
         document.getElementById("pause-overlay").style.display = "block";
         document.getElementById("pause-controls").style.visibility = "visible";
+        this.pause();
+    }
+
+    pause() {
         let textHeader = document.createElement("h1");
         let text = document.createTextNode("The game is paused.");
         textHeader.appendChild(text);
@@ -149,6 +153,24 @@ class App extends Application {
             myNode.removeChild( fc );
             fc = myNode.firstChild;
         }
+    }
+
+    gameOver() {
+        let textHeader = document.createElement("h1");
+        let text = document.createTextNode("GAME OVER");
+        textHeader.appendChild(text);
+        document.getElementById("pause-controls").appendChild(textHeader);
+        textHeader = document.createElement("h1");
+        text = document.createTextNode("Your score: " + this.score);
+        textHeader.appendChild(text);
+        document.getElementById("pause-controls").appendChild(textHeader);
+        let btn = document.createElement("BUTTON");
+        btn.innerText = "Play again";
+        btn.className = "pause-button";
+        btn.onclick = function(){
+            location.href='game.html';
+        };
+        document.getElementById("pause-controls").appendChild(btn);
     }
 
     enableEventListeners() {
