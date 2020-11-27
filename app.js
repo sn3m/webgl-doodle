@@ -6,6 +6,23 @@ import Player from './Player.js';
 import Level from './Level.js';
 
 class App extends Application {
+    initHandlers() {
+        this.pointerlockchangeHandler = this.pointerlockchangeHandler.bind(
+            this,
+        );
+        this.cameraHandler = this.cameraHandler.bind(this);
+        this.resume = this.resume.bind(this);
+        this.resumeStart = this.resumeStart.bind(this);
+        this.showMenu = this.showMenu.bind(this);
+
+        document.addEventListener(
+            'pointerlockchange',
+            this.pointerlockchangeHandler,
+        );
+
+        this.enableEventListeners();
+    }
+
     start() {
         const gl = this.gl;
 
@@ -14,13 +31,16 @@ class App extends Application {
         this.startTime = this.time;
         this.aspect = 1;
 
-        this.pointerlockchangeHandler = this.pointerlockchangeHandler.bind(
-            this,
-        );
-        document.addEventListener(
-            'pointerlockchange',
-            this.pointerlockchangeHandler,
-        );
+        Object.assign(this, {
+            score: 0,
+            scoreInterval: undefined,
+            isPaused: true,
+            gameOver: false,
+        });
+
+        this.initHandlers(this);
+
+        this.gameStart();
 
         this.load('scene.json');
     }
@@ -56,13 +76,164 @@ class App extends Application {
         }
 
         if (document.pointerLockElement === this.canvas) {
-            this.player.enable();
+            if (this.isPaused) {
+                this.isPaused = false;
+                this.player.enable();
+                if (this.scoreInterval === undefined) {
+                    this.scoreHandler(this, 'enable');
+                }
+                // new time
+                this.startTime = Date.now();
+                // continue the animation loop
+                this._update();
+            }
         } else {
+            this.isPaused = true;
             this.player.disable();
+            this.scoreHandler(this, 'disable');
+            this.showMenu();
         }
     }
 
+    scoreHandler(context, action) {
+        if (action === 'enable') {
+            context.scoreInterval = setInterval(() => {
+                context.score += 1;
+                document.getElementById('score').innerText = context.score;
+            }, 100);
+        } else if (action === 'disable') {
+            // Clear interval
+            if (typeof context.scoreInterval !== 'undefined') {
+                clearInterval(context.scoreInterval);
+                context.scoreInterval = undefined;
+            }
+        }
+    }
+
+    cameraHandler() {
+        this.enableCamera();
+    }
+
+    showMenu() {
+        this.disableEventListeners();
+        document.getElementById('pause-overlay').style.display = 'block';
+        document.getElementById('pause-controls').style.visibility = 'visible';
+        if (this.gameOver) {
+            this.gameOverHandler();
+        } else {
+            this.pause();
+        }
+    }
+
+    pause() {
+        let textHeader = document.createElement('h1');
+        let text = document.createTextNode('The game is paused.');
+        textHeader.style.marginBottom = '10vh';
+        textHeader.appendChild(text);
+        document.getElementById('pause-controls').appendChild(textHeader);
+        let btn = document.createElement('BUTTON');
+        btn.innerText = 'Resume';
+        btn.className = 'pause-button';
+        btn.id = 'pause-resume';
+        document.getElementById('pause-controls').appendChild(btn);
+        document
+            .getElementById('pause-resume')
+            .addEventListener('click', this.resume);
+    }
+
+    resume() {
+        document.getElementById('pause-overlay').style.display = 'none';
+        document.getElementById('pause-controls').style.visibility = 'hidden';
+        this.enableEventListeners();
+
+        // clean up
+        let myNode = document.getElementById('pause-controls');
+        let fc = myNode.firstChild;
+
+        while (fc) {
+            myNode.removeChild(fc);
+            fc = myNode.firstChild;
+        }
+        document.removeEventListener('pause-resume', this.resume);
+    }
+
+    gameOverHandler() {
+        let textHeader = document.createElement('h1');
+        let text = document.createTextNode('GAME OVER');
+        textHeader.appendChild(text);
+        document.getElementById('pause-controls').appendChild(textHeader);
+        textHeader = document.createElement('h1');
+        text = document.createTextNode('Your score: ' + this.score);
+        textHeader.style.marginBottom = '6vh';
+        textHeader.appendChild(text);
+        document.getElementById('pause-controls').appendChild(textHeader);
+        let btn = document.createElement('BUTTON');
+        btn.innerText = 'Go to main menu';
+        btn.className = 'pause-button';
+        btn.onclick = function () {
+            location.href = 'index.html';
+        };
+        document.getElementById('pause-controls').appendChild(btn);
+    }
+
+    gameStart() {
+        this.disableEventListeners();
+        document.getElementById('wrapper').style.display = 'block';
+        let textHeader = document.createElement('div');
+        textHeader.className = 'title';
+        let text = document.createTextNode('Doodle Jump 3D');
+        textHeader.appendChild(text);
+        document.getElementById('wrapper').appendChild(textHeader);
+        let btn = document.createElement('BUTTON');
+        btn.innerText = 'PLAY';
+        btn.className = 'main-button';
+        btn.id = 'pause-resume';
+        document.getElementById('wrapper').appendChild(btn);
+        let img = document.createElement("img");
+        img.src = "./images/wasd-transparent.png";
+        img.width = 200; // not responsive
+        img.style.display = "block";
+        img.style.marginLeft = "auto";
+        img.style.marginRight = "auto";
+        img.style.marginTop = "10vh";
+
+
+        document.getElementById('wrapper').appendChild(img);
+        document
+            .getElementById('pause-resume')
+            .addEventListener('click', this.resumeStart);
+    }
+
+    resumeStart() {
+        document.getElementById('wrapper').style.display = 'none';
+        document.getElementById('score-section').style.visibility = 'visible';
+        this.enableEventListeners();
+
+        // clean up
+        let myNode = document.getElementById('wrapper');
+        let fc = myNode.firstChild;
+
+        while (fc) {
+            myNode.removeChild(fc);
+            fc = myNode.firstChild;
+        }
+        document.removeEventListener('pause-resume', this.resumeStart);
+    }
+
+    enableEventListeners() {
+        document.addEventListener('click', this.cameraHandler);
+    }
+
+    disableEventListeners() {
+        document.removeEventListener('click', this.cameraHandler);
+    }
+
     update() {
+        // player fell
+        if(this.player && this.player.translation[1] < -10) {
+            this.gameOver = true;
+            document.exitPointerLock();
+        }
         const t = (this.time = Date.now());
         const dt = (this.time - this.startTime) * 0.001;
         this.startTime = this.time;
@@ -96,6 +267,5 @@ class App extends Application {
 document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.querySelector('canvas');
     const app = new App(canvas);
-    const gui = new dat.GUI();
-    gui.add(app, 'enableCamera');
+    //const gui = new dat.GUI();
 });

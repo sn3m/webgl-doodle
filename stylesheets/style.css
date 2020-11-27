@@ -1,0 +1,145 @@
+body, html {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #dddddd;
+}
+
+.fullscreen {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.fullscreen > * {
+    width: 100%;
+    height: 100%;
+}
+
+.overlay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#score-section {
+    position: fixed;
+    top: 20px;
+    font-family: 'Amatic SC', cursive;
+    font-size: 5vh;
+    border: solid black;
+    background-color: white;
+    padding-left: 20px;
+    padding-right: 20px;
+    min-width: 300px;
+    visibility: hidden;
+}
+
+#pause {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    height: 7vh;
+    width: 7vh;
+    font-family: 'Amatic SC', cursive;
+    font-size: 5vh;
+    border: solid black;
+    border-radius: 50%;
+    cursor: pointer;
+    text-align: center;
+    background-color: white;
+}
+
+#pause:hover {
+    background-color: antiquewhite;
+}
+
+#pause-overlay {
+    position: fixed;
+    display: none;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 2;
+}
+
+#pause-controls {
+    visibility: hidden;
+    position: fixed;
+    width: 50%;
+    height: 50%;
+    top:25%;
+    z-index: 3;
+    background-color: antiquewhite;
+    border: solid black;
+}
+
+h1 {
+    font-family: 'Amatic SC', cursive;
+    text-align: center;
+    font-size: 7vh;
+    margin-bottom: 3vh;
+}
+
+.pause-button {
+    font-family: 'Amatic SC', cursive;
+    text-align: center;
+    font-size: 5vh;
+    display: block;
+    margin: 0 auto;
+    cursor: pointer;
+    background-color: white;
+}
+
+.pause-button:hover {
+    background-color: #e4ffd6;
+}
+
+.main-button {
+    font-family: 'Amatic SC', cursive;
+    font-size: 10vh;
+    background-color: white;
+    min-width: 25vw;
+    color: black;
+    border: 5px double #555555;
+    cursor: pointer;
+    transition: transform .3s;
+    text-align: center;
+    display: block;
+    margin: 0 auto;
+}
+
+.main-button:hover {
+    transform: scale(1.1);
+}
+
+#wrapper {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: antiquewhite;
+    z-index: 2;
+}
+
+.title {
+    margin-top: 15vh;
+    margin-bottom: 10vh;
+    text-align: center;
+    font-family: 'Amatic SC', cursive;
+    font-size: 20vh;
+    max-font-size: 6vw;
+    font-weight: bold;
+}
