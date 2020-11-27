@@ -1,10 +1,9 @@
 import Application from './Application.js';
 
 import Renderer from './Renderer.js';
-import Physics from './Physics.js';
 import SceneLoader from './SceneLoader.js';
-import SceneBuilder from './SceneBuilder.js';
 import Player from './Player.js';
+import Level from './Level.js';
 
 class App extends Application {
     initHandlers() {
@@ -48,14 +47,13 @@ class App extends Application {
 
     async load(uri) {
         const scene = await new SceneLoader().loadScene(uri);
-        const builder = new SceneBuilder(scene);
-        this.scene = builder.build();
-        this.physics = new Physics(this.scene);
+        this.level = new Level(scene, this.renderer);
+        this.level.build();
 
         // Find first camera.
         this.camera = null;
         this.player = null;
-        this.scene.traverse((node) => {
+        this.level.scene.traverse((node) => {
             if (node instanceof Player) {
                 this.player = node;
             }
@@ -64,11 +62,12 @@ class App extends Application {
         this.camera = this.player.children[0];
         this.camera.aspect = this.aspect;
         this.camera.updateProjection();
-        this.renderer.prepare(this.scene);
+        this.renderer.prepare(this.level.scene);
     }
 
     enableCamera() {
         this.canvas.requestPointerLock();
+        this.level.move(true);
     }
 
     pointerlockchangeHandler() {
@@ -228,14 +227,14 @@ class App extends Application {
             this.player.update(dt);
         }
 
-        if (this.physics) {
-            this.physics.update(dt);
+        if (this.level) {
+            this.level.update(dt);
         }
     }
 
     render() {
-        if (this.scene) {
-            this.renderer.render(this.scene, this.camera);
+        if (this.level && this.level.scene) {
+            this.renderer.render(this.level.scene, this.camera);
         }
     }
 
