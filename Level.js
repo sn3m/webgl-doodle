@@ -11,15 +11,19 @@ export default class Level {
         this.lastPlatform = {};
         this.renderer = renderer;
 
-        this.levelVelocity = 3;
-        this.separation = 4;
+        this.levelVelocity = 2.3;
+        this.separation = 3;
     }
 
     build() {
         const builder = new SceneBuilder(this.spec);
         this.scene = builder.build();
-        for (let i = 0; i < 5; i++) {
-            this.addPlatform(0, 0, i * -this.separation);
+        for (let i = 0; i < 10; i++) {
+            let coords = [0, 0, i * -this.separation];
+            if (i > 1) {
+                coords = this.randomizePlatformCoords(coords);
+            }
+            this.addPlatform(coords[0], coords[1], coords[2]);
         }
     }
 
@@ -27,12 +31,12 @@ export default class Level {
         this.scene.traverse((node) => {
             if (node instanceof Platform && node.translation[2] > 10) {
                 this.scene.removePlatform(node.id);
-                this.addPlatform(
+                const coords = this.randomizePlatformCoords([
                     0,
                     0,
                     this.lastPlatform.translation[2] - this.separation,
-                    true,
-                );
+                ]);
+                this.addPlatform(coords[0], coords[1], coords[2], true);
             }
         });
 
@@ -54,6 +58,7 @@ export default class Level {
     addPlatform(x, y, z, isDynamic = false) {
         const id = this.platformCount + 1;
         this.platformCount++;
+
         const mesh = new Mesh(this.spec.meshes[3]);
         const texture = this.spec.textures[3];
         const spec = {
@@ -78,5 +83,17 @@ export default class Level {
         if (isDynamic) {
             this.renderer.prepareNode(platform);
         }
+    }
+
+    randomizePlatformCoords(coords) {
+        const newCoords = coords.slice();
+        newCoords[0] = newCoords[0] + this.getRandom(3);
+        newCoords[1] = newCoords[1] + this.getRandom();
+        newCoords[2] = newCoords[2] + this.getRandom(0.5);
+        return newCoords;
+    }
+
+    getRandom(factor = 1) {
+        return Number.parseFloat(((Math.random() - 0.5) * factor).toFixed(2));
     }
 }

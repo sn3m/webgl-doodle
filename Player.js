@@ -54,9 +54,9 @@ export default class Player extends Node {
 
         // 1.5: add vertical acceleration
         if (this.isStarted) {
-            let accUp = -0.5; // gravity strength
+            let accUp = -0.61; // gravity strength
             if (this.jump) {
-                accUp = 19;
+                accUp = 23;
                 this.jump = false;
             }
             const up = vec3.set(vec3.create(), 0, accUp, 0);
@@ -149,7 +149,7 @@ export default class Player extends Node {
 Player.defaults = {
     velocity: [0, 0, 0],
     mouseSensitivity: 0.002,
-    maxSpeed: 1,
+    maxSpeed: 1.25,
     friction: 0.2,
-    acceleration: 20,
+    acceleration: 15,
 };
