@@ -5,12 +5,8 @@ const vec3 = glMatrix.vec3;
 const mat4 = glMatrix.mat4;
 
 export default class Physics {
-    constructor(scene) {
-        this.scene = scene;
-    }
-
-    update(dt) {
-        this.scene.traverse((node) => {
+    static update(scene, dt) {
+        scene.traverse((node) => {
             if (node.velocity) {
                 vec3.scaleAndAdd(
                     node.translation,
@@ -19,7 +15,7 @@ export default class Physics {
                     dt,
                 );
                 node.updateTransform();
-                this.scene.traverse((other) => {
+                scene.traverse((other) => {
                     if (
                         node !== other &&
                         !node.ignoreCollision &&
@@ -32,11 +28,11 @@ export default class Physics {
         });
     }
 
-    intervalIntersection(min1, max1, min2, max2) {
+    static intervalIntersection(min1, max1, min2, max2) {
         return !(min1 > max2 || min2 > max1);
     }
 
-    aabbIntersection(aabb1, aabb2) {
+    static aabbIntersection(aabb1, aabb2) {
         return (
             this.intervalIntersection(
                 aabb1.min[0],
@@ -59,7 +55,7 @@ export default class Physics {
         );
     }
 
-    resolveCollision(a, b) {
+    static resolveCollision(a, b) {
         // Update bounding boxes with global translation.
         const ta = a.getGlobalTransform();
         const tb = b.getGlobalTransform();

@@ -56,7 +56,7 @@ export default class Player extends Node {
         if (this.isStarted) {
             let accUp = -0.5; // gravity strength
             if (this.jump) {
-                accUp = 20;
+                accUp = 19;
                 this.jump = false;
             }
             const up = vec3.set(vec3.create(), 0, accUp, 0);
@@ -149,7 +149,7 @@ export default class Player extends Node {
 Player.defaults = {
     velocity: [0, 0, 0],
     mouseSensitivity: 0.002,
-    maxSpeed: 3,
+    maxSpeed: 1,
     friction: 0.2,
     acceleration: 20,
 };

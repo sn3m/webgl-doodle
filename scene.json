@@ -25,17 +25,6 @@
                     "far": 200
                 }
             ]
-        },
-        {
-            "type": "platform",
-            "mesh": 0,
-            "texture": 1,
-            "aabb": {
-                "min": [-3, -0.2, -3],
-                "max": [3, 0.2, 3]
-            },
-            "translation": [0, -0.2, 0],
-            "scale": [3, 0.2, 3]
         }
     ],
     "textures": [
